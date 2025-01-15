@@ -1,0 +1,157 @@
+  <!DOCTYPE html>
+  <html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(120deg, #7f53ac 0%, #647dee 100%);
+          padding: 20px;
+      }
+
+      .form-container {
+          background: white;
+          padding: 40px;
+          border-radius: 10px;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+          width: 100%;
+          max-width: 400px;
+      }
+
+      .form-container h1 {
+          text-align: center;
+          color: #333;
+          margin-bottom: 30px;
+          font-size: 2em;
+      }
+
+      .input-group {
+          margin-bottom: 20px;
+      }
+
+      .input-group label {
+          display: block;
+          margin-bottom: 5px;
+          color: #555;
+          font-size: 0.9em;
+      }
+
+      .input-group input {
+          width: 100%;
+          padding: 12px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          font-size: 1em;
+          transition: border-color 0.3s ease;
+      }
+
+      .input-group input:focus {
+          border-color: #647dee;
+          outline: none;
+      }
+
+      .submit-btn {
+          width: 100%;
+          padding: 12px;
+          background: #647dee;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          font-size: 1em;
+          cursor: pointer;
+          transition: background 0.3s ease;
+      }
+
+      .submit-btn:hover {
+          background: #7f53ac;
+      }
+
+      .links {
+          text-align: center;
+          margin-top: 20px;
+      }
+
+      .links a {
+          color: #647dee;
+          text-decoration: none;
+          font-size: 0.9em;
+      }
+
+      .links a:hover {
+          text-decoration: underline;
+      }
+
+      .error-message {
+          color: #ff3860;
+          font-size: 0.9em;
+          margin-bottom: 20px;
+          text-align: center;
+          display: none;
+      }
+    </style>
+  </head>
+  <body>
+  <div class="form-container">
+    <h1>Login</h1>
+    <div id="errorMessage" class="error-message"></div>
+    <form id="loginForm">
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="button" class="submit-btn" onclick="loginUser()">Login</button>
+      <div class="links">
+        <a th:href="@{/register}">Don't have an account? Sign up</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    async function loginUser() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch(`/api/user/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
+          method: 'GET',
+        });
+
+        const errorMessage = document.getElementById('errorMessage');
+        if (response.ok) {
+          window.location.href = '/dashboard';
+        } else if (response.status === 401) {
+          // Handle invalid credentials
+          errorMessage.textContent = 'Invalid email or password.';
+          errorMessage.style.display = 'block';
+        } else {
+          // Handle other server-side errors
+          const errorData = await response.json();
+          errorMessage.textContent = errorData.message || 'An error occurred. Please try again.';
+          errorMessage.style.display = 'block';
+        }
+      } catch (error) {
+        // Handle network or client-side errors
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = 'An error occurred. Please check your connection and try again.';
+        errorMessage.style.display = 'block';
+      }
+    }
+  </script>
+  </body>
+  </html>
