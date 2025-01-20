@@ -1,157 +1,131 @@
-  <!DOCTYPE html>
-  <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-      * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      }
-
-      body {
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(120deg, #7f53ac 0%, #647dee 100%);
-          padding: 20px;
-      }
-
-      .form-container {
-          background: white;
-          padding: 40px;
-          border-radius: 10px;
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-          width: 100%;
-          max-width: 400px;
-      }
-
-      .form-container h1 {
-          text-align: center;
-          color: #333;
-          margin-bottom: 30px;
-          font-size: 2em;
-      }
-
-      .input-group {
-          margin-bottom: 20px;
-      }
-
-      .input-group label {
-          display: block;
-          margin-bottom: 5px;
-          color: #555;
-          font-size: 0.9em;
-      }
-
-      .input-group input {
-          width: 100%;
-          padding: 12px;
-          border: 1px solid #ddd;
-          border-radius: 5px;
-          font-size: 1em;
-          transition: border-color 0.3s ease;
-      }
-
-      .input-group input:focus {
-          border-color: #647dee;
-          outline: none;
-      }
-
-      .submit-btn {
-          width: 100%;
-          padding: 12px;
-          background: #647dee;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          font-size: 1em;
-          cursor: pointer;
-          transition: background 0.3s ease;
-      }
-
-      .submit-btn:hover {
-          background: #7f53ac;
-      }
-
-      .links {
-          text-align: center;
-          margin-top: 20px;
-      }
-
-      .links a {
-          color: #647dee;
-          text-decoration: none;
-          font-size: 0.9em;
-      }
-
-      .links a:hover {
-          text-decoration: underline;
-      }
-
-      .error-message {
-          color: #ff3860;
-          font-size: 0.9em;
-          margin-bottom: 20px;
-          text-align: center;
-          display: none;
-      }
-    </style>
-  </head>
-  <body>
-  <div class="form-container">
-    <h1>Login</h1>
-    <div id="errorMessage" class="error-message"></div>
-    <form id="loginForm">
-      <div class="input-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-      </div>
-      <div class="input-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-      </div>
-      <button type="button" class="submit-btn" onclick="loginUser()">Login</button>
-      <div class="links">
-        <a th:href="@{/register}">Don't have an account? Sign up</a>
-      </div>
-    </form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wristique - Login</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <style>
+    .login-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    }
+    .input-focus {
+        transition: all 0.3s ease;
+    }
+    .input-focus:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+    }
+  </style>
+</head>
+<body class="login-container min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<div class="glass-effect max-w-md w-full rounded-xl p-8">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">Wristique</h1>
+    <p class="mt-2 text-gray-600">Welcome back! Please login to continue</p>
   </div>
 
-  <script>
-    async function loginUser() {
+  <form id="loginForm" class="space-y-6">
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+      <input type="email" id="email" name="email" required
+             class="input-focus mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none">
+    </div>
+
+    <div>
+      <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+      <input type="password" id="password" name="password" required
+             class="input-focus mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none">
+    </div>
+
+    <div>
+      <button type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+        Sign In
+      </button>
+    </div>
+  </form>
+
+  <div class="mt-6 text-center">
+    <p class="text-sm text-gray-600">
+      Don't have an account?
+      <a href="register.html" class="font-medium text-indigo-600 hover:text-indigo-500">Register here</a>
+    </p>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed top-4 right-4 transform -translate-x-1/2 opacity-0 transition-opacity duration-300">
+  <div class="bg-white rounded-lg shadow-lg p-4 max-w-xs">
+    <div class="flex items-center">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p id="toast-message" class="text-sm font-medium text-gray-900"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
       try {
-        const response = await fetch(`/api/user/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
-          method: 'GET',
-        });
+          const response = await fetch(`/api/user/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
 
-        const errorMessage = document.getElementById('errorMessage');
-        if (response.ok) {
-          window.location.href = '/dashboard';
-        } else if (response.status === 401) {
-          // Handle invalid credentials
-          errorMessage.textContent = 'Invalid email or password.';
-          errorMessage.style.display = 'block';
-        } else {
-          // Handle other server-side errors
-          const errorData = await response.json();
-          errorMessage.textContent = errorData.message || 'An error occurred. Please try again.';
-          errorMessage.style.display = 'block';
-        }
+          if (!response.ok) {
+              throw new Error('Invalid credentials');
+          }
+
+          const sessionResponse = await fetch('/api/user/session-info');
+          const sessionData = await sessionResponse.json();
+
+          showToast('Login successful!');
+
+          // Redirect based on role
+          setTimeout(() => {
+              window.location.href = 'dashboard';
+          }, 1000);
       } catch (error) {
-        // Handle network or client-side errors
-        const errorMessage = document.getElementById('errorMessage');
-        errorMessage.textContent = 'An error occurred. Please check your connection and try again.';
-        errorMessage.style.display = 'block';
+          showToast(error.message, 'error');
       }
-    }
-  </script>
-  </body>
-  </html>
+  });
+
+  function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      const icon = toast.querySelector('svg');
+
+      toastMessage.textContent = message;
+
+      if (type === 'error') {
+          icon.classList.remove('text-green-400');
+          icon.classList.add('text-red-400');
+      } else {
+          icon.classList.remove('text-red-400');
+          icon.classList.add('text-green-400');
+      }
+
+      toast.classList.remove('opacity-0');
+      toast.classList.add('opacity-100');
+
+      setTimeout(() => {
+          toast.classList.remove('opacity-100');
+          toast.classList.add('opacity-0');
+      }, 3000);
+  }
+</script>
+</body>
+</html>

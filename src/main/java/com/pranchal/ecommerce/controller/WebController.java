@@ -1,6 +1,5 @@
 package com.pranchal.ecommerce.controller;
 
-
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +18,20 @@ public class WebController
     {
         return "register";
     }
-    @GetMapping("/dashboard")
-    public String dashboard()
+
+    @GetMapping("/profile")
+    public String profile()
     {
-        return "dashboard";
+        return "profile";
     }
 
+    @GetMapping("/dashboard")
+    public String dashboard(HttpSession session)
+    {
+        if(session.isNew())
+        {
+            return "redirect:/login";
+        }
+        return "dashboard";
+    }
 }

@@ -1,12 +1,12 @@
 package com.pranchal.ecommerce.entity;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "app_user")
 public class AppUser {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,6 +18,7 @@ public class AppUser {
     private String email;
 
     @Column(nullable = false)
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -27,9 +28,9 @@ public class AppUser {
     private boolean isActive;
 
     // Default constructor
-    public AppUser() {
-    }
+    public AppUser() {}
 
+    // Constructor with all fields
     public AppUser(Long id, String name, String email, String password, Role role, boolean isActive) {
         this.id = id;
         this.name = name;
@@ -39,54 +40,22 @@ public class AppUser {
         this.isActive = isActive;
     }
 
+    // Getters and setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getPassword() {
-        return password;
-    }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setActive() {
-        this.isActive = true;
-    }
-
+    public boolean isActive() { return isActive; }
+    public void setActive() { this.isActive = true; }
 }

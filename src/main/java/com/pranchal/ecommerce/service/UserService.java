@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -20,12 +19,14 @@ public class UserService {
     public void registerUser(AppUser appUser) {
         Optional<AppUser> existingUser = userRepository.findByEmail(appUser.getEmail());
 
-        String emailRegex = "^[A-Za-z0-9.]+@example\\.com$";
-        if (!appUser.getEmail().matches(emailRegex)) {
-            throw new IllegalArgumentException("Invalid email format. Only letters (A-Z, a-z) and digits (1-9) are allowed before '@example.com'.");
+        String emailRegex = "^[A-Za-z0-9.]+@gmail\\.com$";
+        if(!appUser.getEmail().matches(emailRegex))
+        {
+            throw new IllegalArgumentException("Invalid email format. Only letters (A-Z, a-z) and digits (1-9) are allowed before '@gmail.com'.");
         }
 
-        if (existingUser.isPresent()) {
+        if(existingUser.isPresent())
+        {
             throw new IllegalArgumentException("ID with this email already exists");
         }
 
@@ -35,9 +36,11 @@ public class UserService {
         userRepository.save(appUser);
     }
 
-    public boolean checkCredentials(String email, String password) {
+    public boolean checkCredentials(String email, String password)
+    {
         AppUser user = getUserByEmail(email);
-        if (user == null) {
+        if(user == null)
+        {
             return false;
         }
 
@@ -45,18 +48,24 @@ public class UserService {
         return hashedPassword.equals(user.getPassword());
     }
 
-    protected String hashPassword(String password) {
-        try {
+    protected String hashPassword(String password)
+    {
+        try
+        {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.update(STATIC_SALT.getBytes());
             byte[] hashedBytes = digest.digest(password.getBytes());
             return Base64.getEncoder().encodeToString(hashedBytes);
-        } catch (Exception e) {
+        }
+        catch(Exception e)
+        {
             throw new RuntimeException("Error hashing password", e);
         }
     }
 
-    public AppUser getUserByEmail(String email) {
+    public AppUser getUserByEmail(String email)
+    {
         return userRepository.findByEmail(email).orElse(null);
     }
+
 }
