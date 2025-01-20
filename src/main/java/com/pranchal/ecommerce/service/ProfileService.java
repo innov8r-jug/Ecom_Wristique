@@ -248,9 +248,6 @@ public class ProfileService {
         String hashedNewPassword = hashPassword(newPassword);
         user.setPassword(hashedNewPassword);
 
-        System.out.println("Current hashed password: " + hashedCurrentPassword);
-        System.out.println("New hashed password: " + hashedNewPassword);
-
         userRepository.save(user);
     }
 

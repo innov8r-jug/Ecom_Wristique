@@ -27,6 +27,9 @@ public class AppUser {
     @Column(nullable = false)
     private boolean isActive;
 
+    @Column(nullable = false)
+    private boolean twoFactorEnabled = true;
+
     // Default constructor
     public AppUser() {}
 
@@ -58,4 +61,7 @@ public class AppUser {
 
     public boolean isActive() { return isActive; }
     public void setActive() { this.isActive = true; }
+
+    public boolean isTwoFactorEnabled() { return twoFactorEnabled; }
+    public void setTwoFactorEnabled(boolean twoFactorEnabled) { this.twoFactorEnabled = twoFactorEnabled; }
 }

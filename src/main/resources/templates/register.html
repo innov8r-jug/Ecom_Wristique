@@ -69,7 +69,7 @@
   <div class="mt-6 text-center">
     <p class="text-sm text-gray-600">
       Already have an account?
-      <a href="login.html" class="font-medium text-indigo-600 hover:text-indigo-500">Login here</a>
+      <a href="login" class="font-medium text-indigo-600 hover:text-indigo-500">Login here</a>
     </p>
   </div>
 </div>
@@ -118,7 +118,7 @@
           showToast('Registration successful! Redirecting to login...');
 
           setTimeout(() => {
-              window.location.href = 'login.html';
+              window.location.href = 'login';
           }, 2000);
       } catch (error) {
           showToast(error.message, 'error');

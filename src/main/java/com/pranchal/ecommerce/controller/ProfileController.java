@@ -47,7 +47,6 @@ public class ProfileController {
         }
         catch (IllegalArgumentException e)
         {
-            System.out.println("caught");
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

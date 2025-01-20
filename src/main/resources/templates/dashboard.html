@@ -44,20 +44,16 @@
   </div>
 </nav>
 
-<!-- Main Content -->
 <main class="max-w-7xl mx-auto px-4 py-8">
-  <!-- Products Section -->
   <div id="products-section">
     <div class="flex justify-between items-center mb-8">
       <h2 class="text-2xl font-bold text-gray-800">Available Watches</h2>
     </div>
 
     <div id="products-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <!-- Products will be dynamically inserted here -->
     </div>
   </div>
 
-  <!-- Admin Panel -->
   <div id="admin-panel" class="admin-panel bg-white rounded-lg shadow-lg p-8 mt-8">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Product Management</h2>
 
@@ -114,12 +110,11 @@
   </div>
 </main>
 
-<!-- Toast Notification -->
-<div id="toast" class="fixed top-4 right-4 transform -translate-x-1/2 opacity-0 transition-opacity duration-300">
-  <div class="bg-white rounded-lg shadow-lg p-4 max-w-xs">
+<div id="toast" class="fixed top-4 right-4 transform opacity-0 transition-all duration-300 z-50">
+  <div class="bg-white rounded-lg shadow-lg p-4 min-w-[240px]">
     <div class="flex items-center">
       <div class="flex-shrink-0">
-        <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+        <svg class="h-6 w-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
         </svg>
       </div>
@@ -272,7 +267,10 @@
         throw new Error(productId ? 'Failed to update product' : 'Failed to create product');
       }
 
-      showToast(productId ? 'Product updated successfully' : 'Product created successfully');
+      // Show success toast with specific message
+      showToast(productId ? 'Product updated successfully!' : 'Product created successfully!', 'success');
+
+      // Reset form and reload products
       cancelEdit();
       loadProducts();
     } catch (error) {
@@ -317,11 +315,11 @@
       await fetch('/api/user/logout');
       window.location.href = 'login';
     } catch (error) {
-      showshowToast('Error logging out', 'error');
+      showToast('Error logging out', 'error');
     }
   }
 
-  // Toast notification
+  // Toast// Toast notification function
   function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toast-message');
@@ -329,6 +327,7 @@
 
     toastMessage.textContent = message;
 
+    // Update icon color based on type
     if (type === 'error') {
       icon.classList.remove('text-green-400');
       icon.classList.add('text-red-400');
@@ -337,9 +336,11 @@
       icon.classList.add('text-green-400');
     }
 
+    // Show toast
     toast.classList.remove('opacity-0');
     toast.classList.add('opacity-100');
 
+    // Hide toast after 3 seconds
     setTimeout(() => {
       toast.classList.remove('opacity-100');
       toast.classList.add('opacity-0');

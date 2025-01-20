@@ -17,6 +17,9 @@ import java.util.Map;
 public class AppUserController {
 
     @Autowired
+    private TwoFactorService twoFactorService;
+
+    @Autowired
     private UserService userService;
 
     @PostMapping("/register")
@@ -34,22 +37,66 @@ public class AppUserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestParam String email, @RequestParam String password, HttpSession session)
-    {
+    public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password, HttpSession session) {
         boolean isLoginSuccessful = userService.checkCredentials(email, password);
-        if (isLoginSuccessful)
-        {
+        if (isLoginSuccessful) {
             AppUser user = userService.getUserByEmail(email);
-            session.setAttribute("name", user.getName());
-            session.setAttribute("role", user.getRole());
-            session.setAttribute("email", user.getEmail());
+            if (user.isTwoFactorEnabled()) {
+                try {
+                    Map<String, Object> otpResponse = twoFactorService.generateOTP(user.getEmail());
+                    session.setAttribute("txId", otpResponse.get("txId"));
+                    session.setAttribute("pendingEmail", email);
+                    return ResponseEntity.ok().body(Map.of(
+                            "requiresOTP", true,
+                            "message", "OTP has been sent to your email"
+                    ));
+                } catch (Exception e) {
+                    return new ResponseEntity<>("Error generating OTP", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
 
-            Object roleObj = session.getAttribute("role");
-            String rola = roleObj.toString();
-
-            return new ResponseEntity<>("User Login Successful. Session created.", HttpStatus.OK);
+            // Complete login if 2FA is not enabled (shouldn't happen as it's enabled by default)
+            completeLogin(user, session);
+            return ResponseEntity.ok().body(Map.of(
+                    "requiresOTP", false,
+                    "message", "Login successful"
+            ));
         }
-        return new ResponseEntity<>("Login Failed", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
+    }
+    private void completeLogin(AppUser user, HttpSession session) {
+        session.setAttribute("name", user.getName());
+        session.setAttribute("role", user.getRole());
+        session.setAttribute("email", user.getEmail());
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<?> verifyOTP(@RequestBody Map<String, String> request, HttpSession session) {
+        String otp = request.get("otp");
+        String txId = (String) session.getAttribute("txId");
+        String pendingEmail = (String) session.getAttribute("pendingEmail");
+
+        if (txId == null || pendingEmail == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "No pending OTP verification"));
+        }
+
+        try {
+            Map<String, Object> response = twoFactorService.validateOTP(txId, otp);
+            if ("SUCCESS".equals(response.get("status"))) {
+                AppUser user = userService.getUserByEmail(pendingEmail);
+                completeLogin(user, session);
+                session.removeAttribute("txId");
+                session.removeAttribute("pendingEmail");
+                return ResponseEntity.ok()
+                        .body(Map.of("message", "Login successful"));
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid OTP"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Error validating OTP"));
+        }
     }
 
     @GetMapping("/logout")

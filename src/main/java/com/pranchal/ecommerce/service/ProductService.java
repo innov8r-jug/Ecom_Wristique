@@ -29,7 +29,6 @@ public class ProductService
     public Product updateProduct(Long id, Product product)
     {
         Optional<Product> existingProduct = productRepository.findById(id);
-        System.out.println(existingProduct);
         if(existingProduct.isPresent())
         {
             Product updatedProduct = existingProduct.get();
